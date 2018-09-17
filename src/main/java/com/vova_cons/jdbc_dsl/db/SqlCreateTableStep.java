@@ -27,7 +27,7 @@ public class SqlCreateTableStep<T> extends SqlExecutor {
         boolean isExistsPrimaryKey = false;
         for(SqlColumn column : table.getColumns()) {
             if ((column.getFlags() & SqlDsl.PRIMARY_KEY) > 0) {
-                sb.append(", PRIMARY_KEY(");
+                sb.append(", PRIMARY KEY(");
                 isExistsPrimaryKey = true;
                 break;
             }

@@ -9,7 +9,7 @@ import org.junit.Test;
 public class SqlCreateTableStepTest extends SqlDslTestParent {
     @Test
     public void createTableTest() {
-        String excepted = "CREATE TABLE User(id INT, name VARCHAR(64), PRIMARY_KEY(id))";
+        String excepted = "CREATE TABLE User(id INT, name VARCHAR(64), PRIMARY KEY(id))";
         String actual = new SqlCreateTableStep<>(null, table).getQuery();
         Assert.assertEquals(excepted, actual);
     }
