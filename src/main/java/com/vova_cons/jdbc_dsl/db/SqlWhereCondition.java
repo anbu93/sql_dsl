@@ -22,17 +22,35 @@ public class SqlWhereCondition<T> {
         condition.append(field).append(" = ").append(Objects.toString(value));
         return this;
     }
+
+    public SqlWhereCondition<T> notEquals(String field, Object value) {
+        condition.append(field).append(" != ").append(Objects.toString(value));
+        return this;
+    }
     public SqlWhereCondition<T> equalsText(String field, String value) {
         value = value.replaceAll("'", "").replaceAll("\"", "");
         condition.append(field).append(" = '").append(value).append("'");
+        return this;
+    }
+    public SqlWhereCondition<T> notEqualsText(String field, String value) {
+        value = value.replaceAll("'", "").replaceAll("\"", "");
+        condition.append(field).append(" != '").append(value).append("'");
         return this;
     }
     public SqlWhereCondition<T> less(String field, Object value) {
         condition.append(field).append(" < ").append(Objects.toString(value));
         return this;
     }
+    public SqlWhereCondition<T> lessEquals(String field, Object value) {
+        condition.append(field).append(" <= ").append(Objects.toString(value));
+        return this;
+    }
     public SqlWhereCondition<T> great(String field, Object value) {
         condition.append(field).append(" > ").append(Objects.toString(value));
+        return this;
+    }
+    public SqlWhereCondition<T> greatEquals(String field, Object value) {
+        condition.append(field).append(" >= ").append(Objects.toString(value));
         return this;
     }
     public SqlWhereCondition<T> and() {

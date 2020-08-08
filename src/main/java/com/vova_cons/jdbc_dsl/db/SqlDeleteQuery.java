@@ -3,16 +3,19 @@ package com.vova_cons.jdbc_dsl.db;
 import com.vova_cons.jdbc_dsl.dsl.SqlTable;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Created by anbu on 17.09.18.
  **/
-public class SqlDeleteQuery<T> extends SqlExecutor {
+public class SqlDeleteQuery<T> {
+    private Connection connection;
     private SqlTable<T> table;
     private SqlWhereCondition<SqlDeleteQuery<T>> whereCondition;
 
     public SqlDeleteQuery(Connection connection, SqlTable<T> table) {
-        super(connection);
+        this.connection = connection;
         this.table = table;
     }
 
@@ -33,7 +36,6 @@ public class SqlDeleteQuery<T> extends SqlExecutor {
         return this;
     }
 
-    @Override
     protected String getQuery() {
         StringBuilder sb = new StringBuilder("DELETE FROM ");
         sb.append(table.getTableName());
@@ -41,5 +43,15 @@ public class SqlDeleteQuery<T> extends SqlExecutor {
             sb.append(" WHERE ").append(whereCondition.getQuery());
         }
         return sb.toString();
+    }
+
+    public int execute() {
+        try (Statement st = connection.createStatement()) {
+            st.execute(getQuery());
+            return st.getUpdateCount();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 }

@@ -23,41 +23,46 @@ public class SqlInsertQuery<T> {
         this.table = table;
     }
 
-    public boolean execute(Collection<T> objects) {
+    public int execute(Collection<T> objects) {
         try (Statement st = connection.createStatement()) {
             StringTemplate template = new StringTemplate(getQuery());
+            int count = 0;
             for(T obj : objects) {
                 String preparedQuery = table.getDemarshaller().demarshall(template, obj);
                 st.execute(preparedQuery);
+                count += st.getUpdateCount();
             }
-            return true;
+            return count;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return -1;
         }
     }
 
-    public boolean execute(T... objects) {
+    public int execute(T... objects) {
         try (Statement st = connection.createStatement()) {
             StringTemplate template = new StringTemplate(getQuery());
+            int count = 0;
             for(T obj : objects) {
                 String preparedQuery = table.getDemarshaller().demarshall(template, obj);
                 st.execute(preparedQuery);
+                count += st.getUpdateCount();
             }
-            return true;
+            return count;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return -1;
         }
     }
-    public boolean execute(T object) {
+    public int execute(T object) {
         try (Statement st = connection.createStatement()) {
             StringTemplate template = new StringTemplate(getQuery());
             String preparedQuery = table.getDemarshaller().demarshall(template, object);
-            return st.execute(preparedQuery);
+            st.execute(preparedQuery);
+            return st.getUpdateCount();
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return -1;
         }
     }
 

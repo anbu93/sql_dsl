@@ -8,7 +8,7 @@ import java.sql.Statement;
  * Created by anbu on 17.09.18.
  **/
 public abstract class SqlExecutor {
-    private Connection connection;
+    protected Connection connection;
 
     public SqlExecutor(Connection connection) {
         this.connection = connection;
@@ -16,7 +16,8 @@ public abstract class SqlExecutor {
 
     public boolean execute() {
         try (Statement st = connection.createStatement()) {
-            return st.execute(getQuery());
+            st.execute(getQuery());
+            return !st.getMoreResults() && st.getUpdateCount() == -1;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
