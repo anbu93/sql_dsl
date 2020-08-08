@@ -30,6 +30,10 @@ public class StringTemplate {
             nodes.add(new Node(last, false));
         }
     }
+
+    public StringTemplate(StringTemplate copy) {
+        this(copy.nodes);
+    }
     public StringTemplate(List<Node> nodes) {
         this.nodes = new LinkedList<>();
         for(Node node : nodes) {
@@ -45,7 +49,7 @@ public class StringTemplate {
     }
 
     public StringTemplate set(String key, Object value) {
-        StringTemplate newTemplate = new StringTemplate(nodes);
+        StringTemplate newTemplate = this; //new StringTemplate(nodes);
         newTemplate.setNode(key, Objects.toString(value));
         return newTemplate;
     }

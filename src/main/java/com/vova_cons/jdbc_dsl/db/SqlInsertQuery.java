@@ -28,7 +28,8 @@ public class SqlInsertQuery<T> {
             StringTemplate template = new StringTemplate(getQuery());
             int count = 0;
             for(T obj : objects) {
-                String preparedQuery = table.getDemarshaller().demarshall(template, obj);
+                StringTemplate objectTemplate = new StringTemplate(template);
+                String preparedQuery = table.getDemarshaller().demarshall(objectTemplate, obj);
                 st.execute(preparedQuery);
                 count += st.getUpdateCount();
             }
@@ -44,7 +45,8 @@ public class SqlInsertQuery<T> {
             StringTemplate template = new StringTemplate(getQuery());
             int count = 0;
             for(T obj : objects) {
-                String preparedQuery = table.getDemarshaller().demarshall(template, obj);
+                StringTemplate objectTemplate = new StringTemplate(template);
+                String preparedQuery = table.getDemarshaller().demarshall(objectTemplate, obj);
                 st.execute(preparedQuery);
                 count += st.getUpdateCount();
             }

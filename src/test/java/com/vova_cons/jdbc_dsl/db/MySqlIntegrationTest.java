@@ -1,5 +1,6 @@
 package com.vova_cons.jdbc_dsl.db;
 
+import com.vova_cons.jdbc_dsl.SqlField;
 import com.vova_cons.jdbc_dsl.dsl.SqlDsl;
 import com.vova_cons.jdbc_dsl.dsl.SqlTable;
 import org.junit.Assert;
@@ -28,13 +29,17 @@ public class MySqlIntegrationTest {
     private StringBuilder result = new StringBuilder();
 
     public MySqlIntegrationTest() {
-        table = SqlDsl.createTable(User.class, "User")
-                .fieldInt(ID, SqlDsl.PRIMARY_KEY)
-                .fieldVarchar(64, NAME)
-                .done(
-                        (rs) -> new User(rs.getInt("id"), rs.getString("name")),
-                        (template, user) -> template.set(ID, user.getId()).set(NAME, user.getName()).get()
-                );
+        if (false) {
+            table = SqlDsl.createTable(User.class, "User")
+                    .fieldInt(ID, SqlDsl.PRIMARY_KEY)
+                    .fieldVarchar(64, NAME)
+                    .done(
+                            (rs) -> new User(rs.getInt("id"), rs.getString("name")),
+                            (template, user) -> template.set(ID, user.getId()).set(NAME, user.getName()).get()
+                    );
+        } else {
+            table = SqlDsl.createTableWithAnnotations(User.class, "User");
+        }
         db = new SqlDb("jdbc:mysql://127.0.0.1/sql_dsl_test", "anbu", "bergen14");
     }
 
@@ -125,11 +130,23 @@ public class MySqlIntegrationTest {
     //endregion
 
     public static class User implements SqlUpdateConditionable {
-        int id;
-        String name;
+        @SqlField(name = "id", type = SqlDsl.INTEGER, flags = SqlDsl.PRIMARY_KEY)
+        private int id;
+        @SqlField(name = "name", type = SqlDsl.VARCHAR_64)
+        private String name;
 
         public User(int id, String name) {
             this.id = id;
+            this.name = name;
+        }
+
+        public User() {}
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public void setName(String name) {
             this.name = name;
         }
 
