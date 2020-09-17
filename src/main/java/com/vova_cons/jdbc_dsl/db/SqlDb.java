@@ -3,6 +3,8 @@ package com.vova_cons.jdbc_dsl.db;
 import com.vova_cons.jdbc_dsl.dsl.SqlTable;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -11,14 +13,16 @@ import java.util.Properties;
 public class SqlDb {
     private static final String JDBC_DRIVER_CLASS = "com.mysql.jdbc.Driver";
     private final String url;
-    private final String user;
-    private final String pass;
     private Connection connection;
+    private Map<String, String> connectionProperties = new HashMap<>();
 
     public SqlDb(String url, String user, String password) {
         this.url = url;
-        this.user = user;
-        this.pass = password;
+        connectionProperties.put("user", user);
+        connectionProperties.put("password", password);
+        connectionProperties.put("autoReconnect", "true");
+        connectionProperties.put("useUnicode", "yes");
+        connectionProperties.put("characterEncoding", "UTF-8");
     }
 
     public void init() {
@@ -38,10 +42,10 @@ public class SqlDb {
     private void createConnection() {
         try {
             Properties info = new Properties();
-            info.put("user", user);
-            info.put("password", pass);
-            info.put("autoReconnect", "true");
-            info.put("useUnicode", "yes");
+            for(String key : connectionProperties.keySet()) {
+                String value = connectionProperties.get(key);
+                info.put(key, value);
+            }
             connection = DriverManager.getConnection(url, info);
         } catch (SQLException e) {
             throw new RuntimeException("can't create connection", e);
@@ -81,6 +85,10 @@ public class SqlDb {
 //            }
         }
         return connection;
+    }
+
+    public void setConnectionPropertie(String key, String value) {
+        connectionProperties.put(key, value);
     }
 
     //region interface
